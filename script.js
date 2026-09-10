@@ -3,6 +3,8 @@
 // notitzen anzeigen lassen
 let notes = ['banana','rasen mähen'];
 
+let trashNotes = [];
+
 function renderNotes(){
  //ich muss defenieren wo Sie anzuzeigen ist 
     let contentRef = document.getElementById('content')
@@ -13,11 +15,24 @@ function renderNotes(){
     contentRef.innerHTML += getNoteTempalte(indexNote);
 }
 }
+function renderTrashNotes(){
+ //ich muss defenieren wo Sie anzuzeigen ist 
+    let trashContentRef = document.getElementById('trash-content')
+ //wann werden Sie angezeigt
+    trashContentRef.innerHTML = "";
+
+    for (let indexTrashNote = 0; indexTrashNote < trashNotes.length; indexTrashNote++){
+    trashContentRef.innerHTML += getTrashNoteTempalte(indexTrashNote);
+}
+}
 
 function getNoteTempalte(indexNote){
-    return `<p>+ ${notes[indexNote]}<button onclick="deleteNote(${indexNote})">X</button></p>`;
-    
+    return `<p>+ ${notes[indexNote]}<button onclick="noteTrash(${indexNote})">X</button></p>`;
+//wann muss die notiz gelöscht werden
+}
 
+function getTrashNoteTempalte(indexTrashNote){
+    return `<p>+ ${trashNotes[indexTrashNote]}<button onclick="deleteNote(${indexTrashNote})">X</button></p>`;
 //wann muss die notiz gelöscht werden
 }
 
@@ -41,11 +56,19 @@ function addNote(){
 // notitzen löschen
 
 //anzeige Updaten
-function deleteNote(indexNote){
-    notes.splice(indexNote, 1);
+function noteTrash(indexNote){
+   let trashNote = notes.splice(indexNote, 1);
 //welche notiz muss gelöscht werden
+    trashNotes.push(trashNote);
     renderNotes();
+    renderTrashNotes();
 //anzeige Updaten
+}
+
+function deleteNote(indexTrashNote){
+    trashNotes.splice(indexTrashNote,1);
+    renderTrashNotes();
+
 }
 
 
