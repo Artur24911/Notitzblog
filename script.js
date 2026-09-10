@@ -1,9 +1,31 @@
 // global speichern
 
 // notitzen anzeigen lassen
+let notesTitles = ['Ba','Aufgabe'];
 let notes = ['banana','rasen mähen'];
 
+let trashNotesTitles = [];
 let trashNotes = [];
+
+function init(){
+    renderNotes()
+    getFromLocalStorage();
+}
+
+function saveToLocalStorage(){
+    localStorage.setItem("myData", JSON.stringify(notes));
+}
+
+function getFromLocalStorage(){
+    let myArr = JSON.parse(localStorage.getItem("myData"));
+
+    if(myArr != ""){
+        myArr.push(notes)
+    }
+
+    notes = myArr
+
+}
 
 function renderNotes(){
  //ich muss defenieren wo Sie anzuzeigen ist 
@@ -27,12 +49,12 @@ function renderTrashNotes(){
 }
 
 function getNoteTempalte(indexNote){
-    return `<p>+ ${notes[indexNote]}<button onclick="noteTrash(${indexNote})">X</button></p>`;
+    return `<p>+ title: ${notesTitles[indexNote]} -> ${notes[indexNote]}<button onclick="noteTrash(${indexNote})">X</button></p>`;
 //wann muss die notiz gelöscht werden
 }
 
 function getTrashNoteTempalte(indexTrashNote){
-    return `<p>+ ${trashNotes[indexTrashNote]}<button onclick="deleteNote(${indexTrashNote})">X</button></p>`;
+    return `<p>+ title: ${trashNotesTitles[indexTrashNote]} -> ${trashNotes[indexTrashNote]}<button onclick="deleteNote(${indexTrashNote})">X</button></p>`;
 //wann muss die notiz gelöscht werden
 }
 
@@ -42,10 +64,13 @@ function addNote(){
     let noteInputRef = document.getElementById('note-input');
     let noteInput = noteInputRef.value;
 //eingabe auslesen
+    // noteInput.push(noteInputRef.value)
 
+    if(noteInputRef.value != ""){
     notes.push(noteInput);
+}
 //eingabe speichern/Notizen hinzufügen
-
+    saveToLocalStorage();
     renderNotes();
 //eingabe anzeigen lassen
 
@@ -59,7 +84,9 @@ function addNote(){
 function noteTrash(indexNote){
    let trashNote = notes.splice(indexNote, 1);
 //welche notiz muss gelöscht werden
-    trashNotes.push(trashNote);
+    trashNotes.push(trashNote[0]);
+    let trashNoteTitle = notesTitles.splice(indexNote, 1);
+     trashNotesTitles.push(trashNoteTitle[0]);
     renderNotes();
     renderTrashNotes();
 //anzeige Updaten
@@ -67,7 +94,9 @@ function noteTrash(indexNote){
 
 function deleteNote(indexTrashNote){
     trashNotes.splice(indexTrashNote,1);
+    renderNotes();
     renderTrashNotes();
+
 
 }
 
