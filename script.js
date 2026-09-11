@@ -7,6 +7,33 @@ let notes = ['banana','rasen mähen'];
 let trashNotesTitles = [];
 let trashNotes = [];
 
+let archivNotesTitles = []
+let archivNotes = []
+
+
+let allNotes = {
+    'notesTitles' : ['Ba', 'Aufgabe'],
+    'notes' : ['Banana', 'rasen mähen'],
+    'archivNotesTitles' : [],
+    'archivNotes' : [],
+    'trashNotesTitles' : [],
+    'trashNotes' : [],
+}
+
+function moveNote(indexNote, startKey, destinationKey){
+   let note = allNotes[startKey].splice(indexNote, 1);
+//welche notiz muss gelöscht werden
+    allNotes[destinationKey].push(note[0]);
+    let notesTitle = allNotes[startKey + "Titles"].splice(indexNote, 1);
+     allNotes[destinationKey + "Titles"].push(notesTitle[0]);
+   
+     renderNotes();
+    renderTrashNotes();
+    renderArchivNotes();
+//anzeige Updaten
+}
+
+
 function init(){
     renderNotes()
     getFromLocalStorage();
@@ -49,12 +76,12 @@ function renderTrashNotes(){
 }
 
 function getNoteTempalte(indexNote){
-    return `<p>+ title: ${notesTitles[indexNote]} -> ${notes[indexNote]}<button onclick="noteTrash(${indexNote})">X</button></p>`;
+    return `<p>+ title: ${notesTitles[indexNote]} -> ${notes[indexNote]}<button onclick="moveNote(${indexNote},'notes' , 'trashNotes')">X</button></p>`;
 //wann muss die notiz gelöscht werden
 }
 
 function getTrashNoteTempalte(indexTrashNote){
-    return `<p>+ title: ${trashNotesTitles[indexTrashNote]} -> ${trashNotes[indexTrashNote]}<button onclick="deleteNote(${indexTrashNote})">X</button></p>`;
+    return `<p>+ title: ${trashNotesTitles[indexNote]} -> ${trashNotes[indexTrashNote]}<button onclick="moveNote(${indexNote},'notes' , 'archivNotes')">X</button></p>`;
 //wann muss die notiz gelöscht werden
 }
 
@@ -93,7 +120,8 @@ function noteTrash(indexNote){
 }
 
 function deleteNote(indexTrashNote){
-    trashNotes.splice(indexTrashNote,1);
+    allNotes.trashNotes.splice(indexTrashNote,1);
+    allNotes.trashNotesTitles.splice(indexTrashNote,1);
     renderNotes();
     renderTrashNotes();
 
